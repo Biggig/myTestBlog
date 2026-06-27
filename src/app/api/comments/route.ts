@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { commentSchema } from "@/lib/validators";
 import { getGravatarUrl } from "@/lib/gravatar";
 
+export const dynamic = "force-dynamic";
+
 // Typed recursive comment tree with gravatar URLs attached
 interface CommentWithGravatar {
   id: string;

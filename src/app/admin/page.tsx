@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const [publishedCount, draftCount, pendingComments, recentPosts] = await Promise.all([
     prisma.post.count({ where: { status: "PUBLISHED" } }),

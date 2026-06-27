@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { postSchema } from "@/lib/validators";
 import { generateUniqueSlug, slugify } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status") || "PUBLISHED";

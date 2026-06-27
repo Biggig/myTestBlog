@@ -91,17 +91,17 @@ function headingId(node: TipTapNode): string | undefined {
 // Node renderer
 // ---------------------------------------------------------------------------
 
-interface RenderNodeOptions {
-  // Reserved for future renderer customization (e.g. image lightbox, link previews).
-}
-
-function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions): React.ReactNode {
+function renderNode(
+  node: TipTapNode,
+  index: number,
+  _options?: object
+): React.ReactNode {
   switch (node.type) {
     // Document wrapper
     case "doc":
       return (
         <div className="prose prose-slate dark:prose-invert max-w-none" key={index}>
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </div>
       );
 
@@ -115,7 +115,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
       const Tag = `h${Math.min(level, 3)}` as "h1" | "h2" | "h3";
       return (
         <Tag key={index} id={id} className="scroll-mt-20">
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </Tag>
       );
     }
@@ -124,7 +124,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "paragraph":
       return (
         <p key={index}>
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </p>
       );
 
@@ -146,7 +146,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "blockquote":
       return (
         <blockquote key={index} className="border-l-4 border-primary pl-4 italic my-4">
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </blockquote>
       );
 
@@ -170,7 +170,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "bulletList":
       return (
         <ul key={index} className="list-disc pl-6 my-4 space-y-1">
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </ul>
       );
 
@@ -178,7 +178,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "orderedList":
       return (
         <ol key={index} className="list-decimal pl-6 my-4 space-y-1">
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </ol>
       );
 
@@ -186,7 +186,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "listItem":
       return (
         <li key={index}>
-          {node.content?.map((child, i) => renderNode(child, i, options))}
+          {node.content?.map((child, i) => renderNode(child, i, _options))}
         </li>
       );
 
@@ -195,7 +195,7 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
       if (node.content) {
         return (
           <React.Fragment key={index}>
-            {node.content.map((child, i) => renderNode(child, i, options))}
+            {node.content.map((child, i) => renderNode(child, i, _options))}
           </React.Fragment>
         );
       }

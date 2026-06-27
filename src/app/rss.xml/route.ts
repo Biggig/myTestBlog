@@ -1,5 +1,7 @@
 import { generateRssFeed } from "@/lib/rss";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const xml = await generateRssFeed();
   return new Response(xml, {

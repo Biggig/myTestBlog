@@ -8,6 +8,8 @@ import { ReadingProgress } from "@/components/post/reading-progress";
 import { ShareButtons } from "@/components/post/share-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+
+export const dynamic = "force-dynamic";
 import { CommentList } from "@/components/comment/comment-list";
 import { CommentForm } from "@/components/comment/comment-form";
 import { JsonLd } from "@/components/seo/json-ld";

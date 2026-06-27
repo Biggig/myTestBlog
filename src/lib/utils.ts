@@ -16,7 +16,7 @@ export function slugify(text: string): string {
 
 export async function generateUniqueSlug(
   baseSlug: string,
-  prisma: { post: { findUnique: Function } },
+  prisma: { post: { findUnique: (args: { where: { slug: string } }) => Promise<{ id: string } | null> } },
   excludeId?: string
 ): Promise<string> {
   let slug = baseSlug;

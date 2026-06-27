@@ -4,6 +4,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PostCard } from "@/components/post/post-card";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ tag: string }>;
 }
