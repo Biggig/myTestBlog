@@ -109,6 +109,9 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "heading": {
       const level = Number(node.attrs?.level) || 1;
       const id = headingId(node);
+      // Cap heading levels at h3 to maintain a shallow document hierarchy.
+      // h4–h6 are flattened into h3 for better readability and SEO structure
+      // in blog posts (deep nesting rarely improves the reading experience).
       const Tag = (`h${Math.min(level, 3)}` as keyof JSX.IntrinsicElements) as "h1" | "h2" | "h3";
       return (
         <Tag key={index} id={id} className="scroll-mt-20">

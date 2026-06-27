@@ -58,25 +58,29 @@ export default async function PostPage({ params }: Props) {
 
   const readingTime = estimateReadingTime(post.content);
 
-  // Fetch prev and next posts (nearest by publishedAt)
-  const [prevPost, nextPost] = await Promise.all([
-    prisma.post.findFirst({
-      where: {
-        status: "PUBLISHED",
-        publishedAt: { lt: post.publishedAt ?? undefined },
-      },
-      orderBy: { publishedAt: "desc" },
-      select: { title: true, slug: true },
-    }),
-    prisma.post.findFirst({
-      where: {
-        status: "PUBLISHED",
-        publishedAt: { gt: post.publishedAt ?? undefined },
-      },
-      orderBy: { publishedAt: "asc" },
-      select: { title: true, slug: true },
-    }),
-  ]);
+  // Fetch prev and next posts (nearest by publishedAt).
+  // Skip when publishedAt is null (shouldn't happen for PUBLISHED posts, but guard defensively).
+  const [prevPost, nextPost] =
+    post.publishedAt
+      ? await Promise.all([
+          prisma.post.findFirst({
+            where: {
+              status: "PUBLISHED",
+              publishedAt: { lt: post.publishedAt },
+            },
+            orderBy: { publishedAt: "desc" },
+            select: { title: true, slug: true },
+          }),
+          prisma.post.findFirst({
+            where: {
+              status: "PUBLISHED",
+              publishedAt: { gt: post.publishedAt },
+            },
+            orderBy: { publishedAt: "asc" },
+            select: { title: true, slug: true },
+          }),
+        ])
+      : [null, null];
 
   return (
     <>

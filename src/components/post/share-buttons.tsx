@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ShareButtonsProps {
   title: string;
@@ -13,6 +13,15 @@ interface ShareButtonsProps {
  */
 export function ShareButtons({ title, slug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const [twitterUrl, setTwitterUrl] = useState("");
+
+  // Build Twitter share URL on mount — uses window.location.origin which is
+  // unavailable during SSR, so we defer to a useEffect.
+  useEffect(() => {
+    setTwitterUrl(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`${window.location.origin}/posts/${slug}`)}`
+    );
+  }, [title, slug]);
 
   const handleCopy = async () => {
     try {
@@ -20,23 +29,36 @@ export function ShareButtons({ title, slug }: ShareButtonsProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers or non-HTTPS contexts
-      setCopied(false);
+      // Clipboard API unavailable — try execCommand fallback
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = window.location.href;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        // Both methods failed — silently ignore
+      }
     }
   };
 
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`${window.location.origin}/posts/${slug}`)}`;
-
   return (
     <div className="flex gap-4 pt-8 border-t border-border">
-      <a
-        href={twitterUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-sm text-muted-foreground hover:text-primary transition-colors"
-      >
-        Twitter
-      </a>
+      {twitterUrl && (
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          Twitter
+        </a>
+      )}
       <button
         type="button"
         onClick={handleCopy}
