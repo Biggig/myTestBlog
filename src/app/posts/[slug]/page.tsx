@@ -7,6 +7,9 @@ import { PostContent } from "@/components/post/post-content";
 import { ReadingProgress } from "@/components/post/reading-progress";
 import { ShareButtons } from "@/components/post/share-buttons";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { CommentList } from "@/components/comment/comment-list";
+import { CommentForm } from "@/components/comment/comment-form";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -57,6 +60,32 @@ export default async function PostPage({ params }: Props) {
   }
 
   const readingTime = estimateReadingTime(post.content);
+
+  // Fetch approved top-level comments with nested replies (3 levels deep)
+  const comments = await prisma.comment.findMany({
+    where: {
+      postId: post.id,
+      parentId: null,
+      isApproved: true,
+    },
+    include: {
+      replies: {
+        where: { isApproved: true },
+        include: {
+          replies: {
+            where: { isApproved: true },
+            include: {
+              replies: {
+                where: { isApproved: true },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
   // Fetch prev and next posts (nearest by publishedAt).
   // Skip when publishedAt is null (shouldn't happen for PUBLISHED posts, but guard defensively).
@@ -133,7 +162,19 @@ export default async function PostPage({ params }: Props) {
         {/* Share buttons */}
         <ShareButtons title={post.title} slug={post.slug} />
 
-        {/* TODO Task 14: Add comment section */}
+        {/* Comment section */}
+        <section className="mt-10">
+          <Separator className="mb-8" />
+          <h2 className="text-xl font-bold mb-6">评论</h2>
+          <CommentList
+            comments={JSON.parse(JSON.stringify(comments))}
+            postId={post.id}
+          />
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-4">发表评论</h3>
+            <CommentForm postId={post.id} />
+          </div>
+        </section>
 
         {/* Prev / Next navigation */}
         <nav className="grid grid-cols-2 gap-4 pt-8 mt-8 border-t border-border">
