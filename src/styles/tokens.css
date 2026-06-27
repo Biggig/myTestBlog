@@ -1,1 +1,52 @@
-/* Design tokens - will be populated in Task 16 */
+/**
+ * MyBlog Design Token System
+ * ===========================
+ *
+ * Three-layer architecture: Primitive → Semantic → Component
+ *
+ * Layer 1 — Primitive (raw values)
+ *   Colors: slate-50/100/200/400/500/800/900/950, blue-500/600, white
+ *   Fonts: "Inter" (sans), "JetBrains Mono" (mono)
+ *   Radii: --radius (0.5rem)
+ *
+ * Layer 2 — Semantic (CSS custom properties defined in globals.css)
+ *   --background / --foreground       → page background / body text
+ *   --card / --card-foreground         → card surfaces
+ *   --primary / --primary-foreground   → accent color / text on accent
+ *   --secondary / --secondary-foreground → secondary surfaces
+ *   --muted / --muted-foreground       → subdued surfaces / helper text
+ *   --accent / --accent-foreground     → emphasis surfaces
+ *   --border / --input / --ring        → borders, input fields, focus rings
+ *
+ *   Light theme (:root)
+ *     Background: white (#ffffff)
+ *     Surface:    slate-50 (#f8fafc)
+ *     Text:       slate-900 (#0f172a)
+ *     Muted:      slate-500 (#64748b)
+ *     Accent:     blue-500 (#3b82f6)
+ *     Border:     slate-200 (#e2e8f0)
+ *
+ *   Dark theme (.dark)
+ *     Background: slate-950 (#020617)
+ *     Surface:    slate-900 (#0f172a)
+ *     Text:       slate-100 (#f1f5f9)
+ *     Muted:      slate-400 (#94a3b8)
+ *     Accent:     blue-500 (#3b82f6)
+ *     Border:     slate-800 (#1e293b)
+ *
+ * Layer 3 — Component (Tailwind utility classes in component code)
+ *   bg-background, text-foreground, bg-muted, text-muted-foreground,
+ *   bg-primary text-primary-foreground, border-border, bg-card, etc.
+ *
+ * Usage
+ *   <div className="bg-background text-foreground">
+ *     <h1 className="text-primary">Title</h1>
+ *     <p className="text-muted-foreground">Subtitle</p>
+ *   </div>
+ *
+ * Theme switching via next-themes (class strategy)
+ *   <html class="dark"> or <html class="light">
+ *
+ * Font face definitions for Inter and JetBrains Mono are loaded
+ * via next/font/google in the root layout (src/app/layout.tsx).
+ */
