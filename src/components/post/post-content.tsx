@@ -1,4 +1,5 @@
 import React from "react";
+import { CodeBlock } from "@/components/code/code-block";
 
 // ---------------------------------------------------------------------------
 // TipTap JSON types
@@ -132,15 +133,13 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
     case "text":
       return <React.Fragment key={index}>{renderMarks(node.text ?? "", node.marks)}</React.Fragment>;
 
-    // Code block — TODO Task 11: Replace with Shiki CodeBlock component
+    // Code block with Shiki syntax highlighting
     case "codeBlock": {
-      const language = node.attrs?.language ?? "";
+      const language = (node.attrs?.language as string) || "text";
       const code = node.content?.[0]?.text ?? "";
+      const filename = node.attrs?.filename as string | undefined;
       return (
-        // TODO Task 11: Replace with Shiki CodeBlock component
-        <pre key={index} className="bg-muted rounded-lg p-4 overflow-x-auto my-4">
-          <code className={`language-${language} text-sm font-mono`}>{code}</code>
-        </pre>
+        <CodeBlock key={index} code={code} language={language} filename={filename} />
       );
     }
 
