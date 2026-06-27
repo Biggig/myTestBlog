@@ -14,7 +14,10 @@
       "Bash(git add *)",
       "Bash(git commit -m 'feat: scaffold Next.js project with Tailwind, shadcn/ui, and Prisma *)",
       "mcp__context7__query-docs",
-      "Bash(git commit -m 'fix: add missing lucide-react dependency and use Prisma 7 canonical env\\(\\) helper *)"
+      "Bash(git commit -m 'fix: add missing lucide-react dependency and use Prisma 7 canonical env\\(\\) helper *)",
+      "Bash(npx tsc *)",
+      "Bash(npx prisma *)",
+      "Bash(git commit -m 'fix: add missing dependencies \\(cva, typography\\), fix toast type, remove .env *)"
     ]
   }
 }
