@@ -17,7 +17,18 @@
       "Bash(git commit -m 'fix: add missing lucide-react dependency and use Prisma 7 canonical env\\(\\) helper *)",
       "Bash(npx tsc *)",
       "Bash(npx prisma *)",
-      "Bash(git commit -m 'fix: add missing dependencies \\(cva, typography\\), fix toast type, remove .env *)"
+      "Bash(git commit -m 'fix: add missing dependencies \\(cva, typography\\), fix toast type, remove .env *)",
+      "Bash(DATABASE_URL=\"postgresql://dummy:dummy@localhost:5432/dummy\" npx prisma generate)",
+      "Bash(git commit -m 'feat: add Prisma schema with User, Post, Tag, PostTag, Comment models and full-text search *)",
+      "Bash(git commit -m 'fix: add GIN index on Post.searchVector for search performance *)",
+      "Bash(node -e \"const bcrypt = require\\('bcryptjs'\\); console.log\\('bcryptjs loaded, version:', bcrypt.version || 'unknown'\\); console.log\\('has hash:', typeof bcrypt.hash\\);\")",
+      "Bash(node -e \"const bcrypt = require\\('bcryptjs'\\); console.log\\(bcrypt.hash.toString\\(\\).slice\\(0, 200\\)\\);\")",
+      "Bash(npx tsx *)",
+      "Bash(node -e \"require\\('dotenv'\\); console.log\\('dotenv found'\\);\")",
+      "Bash(git commit -m 'feat: add seed script for admin user and initial tags *)",
+      "Bash(openssl rand *)",
+      "Bash(git commit -m 'feat: add NextAuth v5 authentication with credentials provider *)",
+      "Bash(git commit *)"
     ]
   }
 }

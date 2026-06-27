@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Placeholder from "@tiptap/extension-placeholder";
+import Image from "@tiptap/extension-image";
 import { common, createLowlight } from "lowlight";
 import { EditorToolbar } from "./editor-toolbar";
 import { useEffect } from "react";
@@ -24,6 +25,9 @@ export function TipTapEditor({ content, onChange, placeholder = "开始写作...
       }),
       CodeBlockLowlight.configure({ lowlight }),
       Placeholder.configure({ placeholder }),
+      Image.configure({
+        inline: false,
+      }),
     ],
     content: content ? JSON.parse(content) : "",
     onUpdate: ({ editor }) => {
