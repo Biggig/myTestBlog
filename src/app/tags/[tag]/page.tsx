@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -7,7 +8,7 @@ interface Props {
   params: Promise<{ tag: string }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { tag: tagSlug } = await params;
 
   const tag = await prisma.tag.findUnique({

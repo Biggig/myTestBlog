@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = {
-  title: "标签",
+export const metadata: Metadata = {
+  title: "标签 | MyBlog",
+  description: "浏览所有标签",
 };
 
 export default async function TagsPage() {
