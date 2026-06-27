@@ -59,7 +59,7 @@ export async function CodeBlock({
     : "text";
 
   const displayLabel = filename || language;
-  const trimmedCode = trimmedCode;
+  const trimmedCode = code.trimEnd();
 
   try {
     const darkHtml = h.codeToHtml(trimmedCode, {

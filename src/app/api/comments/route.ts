@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Comment } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { commentSchema } from "@/lib/validators";
 import { getGravatarUrl } from "@/lib/gravatar";
 
 // Typed recursive comment tree with gravatar URLs attached
-interface CommentWithGravatar extends Omit<Comment, "createdAt"> {
+interface CommentWithGravatar {
+  id: string;
+  content: string;
+  authorName: string;
+  authorEmail: string | null;
+  parentId: string | null;
+  postId: string;
+  isApproved: boolean;
   createdAt: string;
   gravatarUrl?: string;
   replies?: CommentWithGravatar[];
