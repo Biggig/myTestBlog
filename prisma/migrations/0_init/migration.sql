@@ -87,3 +87,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER post_search_trigger
   BEFORE INSERT OR UPDATE ON "Post"
   FOR EACH ROW EXECUTE FUNCTION update_post_search_vector();
+
+-- Full-text search index
+CREATE INDEX "Post_searchVector_idx" ON "Post" USING GIN ("searchVector");
