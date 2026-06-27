@@ -92,8 +92,7 @@ function headingId(node: TipTapNode): string | undefined {
 // ---------------------------------------------------------------------------
 
 interface RenderNodeOptions {
-  /** Custom code block renderer — falls back to simple pre/code when omitted */
-  renderCodeBlock?: (node: TipTapNode) => React.ReactNode;
+  // Reserved for future renderer customization (e.g. image lightbox, link previews).
 }
 
 function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions): React.ReactNode {
@@ -211,19 +210,14 @@ function renderNode(node: TipTapNode, index: number, options?: RenderNodeOptions
 export interface PostContentProps {
   /** Raw TipTap JSON string from the database */
   content: string;
-  /** Optional custom code block renderer (Shiki integration in Task 11) */
-  renderCodeBlock?: (node: TipTapNode) => React.ReactNode;
 }
 
 /**
  * PostContent renders a TipTap JSON document string into React elements.
- * Handles headings, paragraphs, lists, blockquotes, code blocks, images,
- * and inline marks (bold, italic, code, link, strike).
- *
- * Pass `renderCodeBlock` to replace the default `<pre><code>` fallback
- * with a syntax-highlighted component (Task 11 — Shiki integration).
+ * Handles headings, paragraphs, lists, blockquotes, code blocks (Shiki-highlighted),
+ * images, and inline marks (bold, italic, code, link, strike).
  */
-export function PostContent({ content, renderCodeBlock }: PostContentProps) {
+export function PostContent({ content }: PostContentProps) {
   let doc: TipTapNode;
   try {
     doc = JSON.parse(content);
@@ -231,5 +225,5 @@ export function PostContent({ content, renderCodeBlock }: PostContentProps) {
     return <p className="text-muted-foreground">无法渲染内容。</p>;
   }
 
-  return <>{renderNode(doc, 0, { renderCodeBlock })}</>;
+  return <>{renderNode(doc, 0)}</>;
 }

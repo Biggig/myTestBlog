@@ -9,7 +9,6 @@ export interface CodeBlockProps {
   code: string;
   language: string;
   filename?: string;
-  showLineNumbers?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -53,7 +52,6 @@ export async function CodeBlock({
   code,
   language,
   filename,
-  showLineNumbers: _showLineNumbers = true,
 }: CodeBlockProps) {
   const h = await getHighlighter();
   const lang = h.getLoadedLanguages().includes(language)
@@ -61,13 +59,14 @@ export async function CodeBlock({
     : "text";
 
   const displayLabel = filename || language;
+  const trimmedCode = trimmedCode;
 
   try {
-    const darkHtml = h.codeToHtml(code.trimEnd(), {
+    const darkHtml = h.codeToHtml(trimmedCode, {
       lang,
       theme: "github-dark",
     });
-    const lightHtml = h.codeToHtml(code.trimEnd(), {
+    const lightHtml = h.codeToHtml(trimmedCode, {
       lang,
       theme: "github-light",
     });
@@ -77,10 +76,12 @@ export async function CodeBlock({
         {/* Top bar with filename + copy button */}
         <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border text-xs text-muted-foreground font-mono">
           <span>{displayLabel}</span>
-          <CopyButton code={code.trimEnd()} />
+          <CopyButton code={trimmedCode} />
         </div>
 
         {/* Light theme (visible in light mode) */}
+        {/* Shiki output is pre-sanitized: it HTML-escapes source text and only
+            emits known-safe span/class markup, so dangerouslySetInnerHTML is safe here. */}
         <div className="dark:hidden [&_pre]:!bg-muted [&_pre]:p-4 [&_pre]:overflow-x-auto [&_code]:text-sm [&_.line]:pr-4">
           <div dangerouslySetInnerHTML={{ __html: lightHtml }} />
         </div>
@@ -97,10 +98,10 @@ export async function CodeBlock({
       <div className="my-6 rounded-lg overflow-hidden border border-border">
         <div className="flex items-center justify-between px-4 py-2 bg-muted border-b border-border text-xs text-muted-foreground font-mono">
           <span>{displayLabel}</span>
-          <CopyButton code={code.trimEnd()} />
+          <CopyButton code={trimmedCode} />
         </div>
         <pre className="p-4 overflow-x-auto bg-muted text-sm font-mono">
-          <code>{code.trimEnd()}</code>
+          <code>{trimmedCode}</code>
         </pre>
       </div>
     );
