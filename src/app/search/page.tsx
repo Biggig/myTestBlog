@@ -5,16 +5,7 @@ import { useDebounce } from "use-debounce";
 import Link from "next/link";
 import { Search, Loader2, Tags } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-interface SearchResult {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  headline: string;
-  publishedAt: string | null;
-  rank: number;
-}
+import type { SearchResult } from "@/lib/search";
 
 export default function SearchPage() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,18 +27,22 @@ export default function SearchPage() {
     }
 
     let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
     setSearched(true);
 
-    fetch(`/api/search?q=${encodeURIComponent(debounced.trim())}`)
-      .then((res) => res.json())
+    fetch(`/api/search?q=${encodeURIComponent(debounced.trim())}`, {
+      signal: controller.signal,
+    })
+      .then((res) => (res.ok ? res.json() : { results: [] }))
       .then((data) => {
         if (!cancelled) {
           setResults(data.results || []);
           setLoading(false);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err.name === "AbortError") return;
         if (!cancelled) {
           setResults([]);
           setLoading(false);
@@ -56,6 +51,7 @@ export default function SearchPage() {
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [debounced]);
 

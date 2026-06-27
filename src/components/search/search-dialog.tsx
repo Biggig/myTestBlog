@@ -12,16 +12,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-
-interface SearchResult {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  headline: string;
-  publishedAt: string | null;
-  rank: number;
-}
+import type { SearchResult } from "@/lib/search";
 
 export function SearchDialog() {
   const router = useRouter();
@@ -55,17 +46,22 @@ export function SearchDialog() {
     }
 
     let cancelled = false;
+    const controller = new AbortController();
+
     setLoading(true);
 
-    fetch(`/api/search?q=${encodeURIComponent(debounced.trim())}`)
-      .then((res) => res.json())
+    fetch(`/api/search?q=${encodeURIComponent(debounced.trim())}`, {
+      signal: controller.signal,
+    })
+      .then((res) => (res.ok ? res.json() : { results: [] }))
       .then((data) => {
         if (!cancelled) {
           setResults(data.results || []);
           setLoading(false);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err.name === "AbortError") return;
         if (!cancelled) {
           setResults([]);
           setLoading(false);
@@ -74,6 +70,7 @@ export function SearchDialog() {
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [debounced, open]);
 
@@ -86,9 +83,10 @@ export function SearchDialog() {
   );
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} onOpenChange={setOpen} shouldFilter={false}>
       <CommandInput
         placeholder="搜索文章..."
+        aria-label="搜索文章"
         value={query}
         onValueChange={setQuery}
       />
@@ -108,7 +106,7 @@ export function SearchDialog() {
             {results.map((r) => (
               <CommandItem
                 key={r.id}
-                value={r.id}
+                value={r.title}
                 onSelect={() => handleSelect(r.slug)}
                 className="flex items-start gap-2 cursor-pointer"
               >
