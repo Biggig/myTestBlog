@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Comment } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { commentSchema } from "@/lib/validators";
 import { getGravatarUrl } from "@/lib/gravatar";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function attachGravatarUrls(comments: any[]): any[] {
-  return comments.map((c: any) => ({
+// Typed recursive comment tree with gravatar URLs attached
+interface CommentWithGravatar extends Omit<Comment, "createdAt"> {
+  createdAt: string;
+  gravatarUrl?: string;
+  replies?: CommentWithGravatar[];
+  post?: { id: string; title: string; slug: string };
+}
+
+function attachGravatarUrls(comments: CommentWithGravatar[]): CommentWithGravatar[] {
+  return comments.map((c) => ({
     ...c,
     gravatarUrl: getGravatarUrl(c.authorEmail),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     replies: c.replies ? attachGravatarUrls(c.replies) : [],
   }));
 }
@@ -47,8 +54,9 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const comments = attachGravatarUrls(rawComments as any[]);
+    // Serialize dates to strings (Next.js can't pass Date objects in JSON responses)
+    const serialized = JSON.parse(JSON.stringify(rawComments)) as CommentWithGravatar[];
+    const comments = attachGravatarUrls(serialized);
     return NextResponse.json({ comments });
   }
 
@@ -118,11 +126,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // If parentId is provided, verify the parent comment exists and belongs to the same post
+  // If parentId is provided, verify the parent comment exists and belongs to the same post,
+  // and enforce the 2-level nesting limit (grandparent can't have a parentId).
   if (parentId) {
     const parentComment = await prisma.comment.findUnique({
       where: { id: parentId },
-      select: { postId: true, isApproved: true },
+      select: { postId: true, parentId: true, isApproved: true },
     });
     if (!parentComment || parentComment.postId !== postId) {
       return NextResponse.json(
@@ -133,6 +142,12 @@ export async function POST(req: NextRequest) {
     if (!parentComment.isApproved) {
       return NextResponse.json(
         { error: { code: "VALIDATION", message: "无法回复未审核的评论" } },
+        { status: 400 }
+      );
+    }
+    if (parentComment.parentId) {
+      return NextResponse.json(
+        { error: { code: "VALIDATION", message: "最多支持两层嵌套回复" } },
         { status: 400 }
       );
     }
