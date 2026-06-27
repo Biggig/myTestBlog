@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { SearchDialog } from "@/components/search/search-dialog";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Header />
           <main className="container mx-auto px-4 py-8">{children}</main>
+          <SearchDialog />
           <Footer />
           <Toaster />
         </ThemeProvider>
