@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --force)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest init --help)",
+      "Bash(npx shadcn@latest init -d -f)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx shadcn@latest add button -y)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx shadcn@latest add card input label form dialog dropdown-menu command table badge separator sheet pagination toast textarea select skeleton avatar tabs -y)",
+      "Bash(NODE_OPTIONS=\"--max-old-space-size=4096\" npx prisma init --datasource-provider postgresql)",
+      "Bash(npm ls *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'feat: scaffold Next.js project with Tailwind, shadcn/ui, and Prisma *)"
+    ]
+  }
+}
