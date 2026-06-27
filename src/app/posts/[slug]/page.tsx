@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CommentList } from "@/components/comment/comment-list";
 import { CommentForm } from "@/components/comment/comment-form";
+import { JsonLd } from "@/components/seo/json-ld";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -25,17 +26,44 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const post = await prisma.post.findUnique({
     where: { slug },
-    select: { title: true, excerpt: true },
+    select: {
+      title: true,
+      excerpt: true,
+      coverImage: true,
+      publishedAt: true,
+      updatedAt: true,
+      author: { select: { username: true } },
+      tags: { select: { tag: { select: { name: true } } } },
+    },
   });
 
   if (!post) return { title: "文章未找到" };
 
+  const tagNames = post.tags.map((pt) => pt.tag.name);
+
   return {
     title: post.title,
     description: post.excerpt ?? undefined,
+    metadataBase: new URL(baseUrl),
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt ?? undefined,
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      images: post.coverImage ? [post.coverImage] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt ?? undefined,
+      images: post.coverImage ? [post.coverImage] : [],
+    },
+    keywords: tagNames,
   };
 }
 
@@ -46,10 +74,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
 
-  // Fetch the post with tags
+  // Fetch the post with tags and author
   const post = await prisma.post.findUnique({
     where: { slug },
     include: {
+      author: { select: { username: true } },
       tags: { include: { tag: true } },
     },
   });
@@ -111,8 +140,27 @@ export default async function PostPage({ params }: Props) {
         ])
       : [null, null];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    author: {
+      "@type": "Person",
+      name: post.author.username,
+    },
+    image: post.coverImage ?? undefined,
+    publisher: {
+      "@type": "Organization",
+      name: process.env.NEXT_PUBLIC_BLOG_NAME || "MyBlog",
+    },
+  };
+
   return (
     <>
+      <JsonLd data={jsonLd} />
       <ReadingProgress />
 
       <article className="mx-auto max-w-3xl">

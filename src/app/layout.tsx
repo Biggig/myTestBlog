@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -6,10 +6,26 @@ import { SearchDialog } from "@/components/search/search-dialog";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_BLOG_NAME || "MyBlog",
+  title: {
+    default: process.env.NEXT_PUBLIC_BLOG_NAME || "MyBlog",
+    template: `%s | ${process.env.NEXT_PUBLIC_BLOG_NAME || "MyBlog"}`,
+  },
   description: process.env.NEXT_PUBLIC_BLOG_DESCRIPTION || "",
-  alternates: { types: { "application/rss+xml": "/rss.xml" } },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  alternates: {
+    types: { "application/rss+xml": "/rss.xml" },
+  },
+  openGraph: {
+    type: "website",
+    siteName: process.env.NEXT_PUBLIC_BLOG_NAME || "MyBlog",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
