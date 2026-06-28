@@ -28,7 +28,21 @@
       "Bash(git commit -m 'feat: add seed script for admin user and initial tags *)",
       "Bash(openssl rand *)",
       "Bash(git commit -m 'feat: add NextAuth v5 authentication with credentials provider *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(powershell -Command \"Get-Command winget -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\" 2>&1)",
+      "Bash(curl.exe --version)",
+      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\pg_ctl.exe *)",
+      "Bash(\"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\postgres.exe\" -D \"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\data\")",
+      "Bash(\"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\pg_isready.exe\")",
+      "Bash(kill %1)",
+      "Bash(\"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\pg_ctl.exe\" -D \"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\data\" -l \"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\data\\\\logfile\" start)",
+      "Bash(mkdir -p \"C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\data\\\\log\")",
+      "Bash(echo \"PostgreSQL started in background, PID: $!\")",
+      "Bash(netstat -ano)",
+      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\initdb.exe *)",
+      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\createdb.exe *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\psql.exe *)"
     ]
   }
 }
