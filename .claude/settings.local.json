@@ -42,7 +42,13 @@
       "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\initdb.exe *)",
       "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\createdb.exe *)",
       "Bash(grep -v \"^$\")",
-      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\psql.exe *)"
+      "Bash(C:\\\\Program Files\\\\PostgreSQL\\\\16\\\\bin\\\\psql.exe *)",
+      "Bash(git push *)",
+      "Bash(git mv *)",
+      "Bash(mv layout.tsx \"\\(protected\\)/layout.tsx\")",
+      "Bash(mv page.tsx \"\\(protected\\)/page.tsx\")",
+      "Bash(cp -r posts/* \"\\(protected\\)/posts/\")",
+      "Bash(cp -r comments/* \"\\(protected\\)/comments/\")"
     ]
   }
 }
